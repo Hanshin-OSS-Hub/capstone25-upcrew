@@ -2,7 +2,6 @@
   <br>
   9조 이러다졸업조 UpCrew
   <br>
-  <br>
   한신대학교 학생학습지원앱
   <br>
 </h1>
@@ -69,6 +68,8 @@ $ npm start
 ## UIUX 
 
 UIUX 앱 [디자인](https://www.figma.com/design/Z9tQCgVkBRwPdPOc9ZHZh1/%EC%BA%A1%EB%94%94_%EC%9D%B4%EB%9F%AC%EB%8B%A4%EC%A1%B8%EC%97%85?node-id=0-1&t=YM0C7m7QOdhPkOWA-1) 결과를 확인할 수 있다.
+
+
 ## 
 
 
