@@ -8,9 +8,11 @@
 </h1>
 <p align="center">
   <a href="#key-features">수정 필요</a> •
+  <a href="#key-features">프로젝트 개요</a> •
+  <a href="#key-features">팀원 명단 및 역할</a> •
   <a href="#key-features">Key Features</a> •
-  <a href="#how-to-use">How To Use</a> •
-  <a href="#download">Download</a> •
+  <a href="#how-to-use">실행 방법</a> •
+  <a href="#download">실행 환경</a> •
   <a href="#credits">Credits</a> •
   <a href="#related">Related</a> •
   <a href="#license">License</a>
