@@ -1,3 +1,21 @@
+**아래는 깃허브 리드미 작성 가이드 (작성 후 삭제 예정)**
+```
+1. README 표지
+2. 하이퍼링크 (선택)
+3. 프로젝트 간단 소개
+4. 팀 구성
+5. 역할 설명
+6. 개발환경 (프론트/백엔드/협업 툴(디스코드, 카카오톡, 깃허브, 피그마), 디자인(피그마) 등)
+8. 벤치마킹/사용한 개발 기술
+9. 핵심 기능
+10. UI/UX 디자인
+11. 모바일 프로그래밍 (Android Studio)
+12. 개발 기간
+13. 프로젝트 후기
+```
+
+<br>
+
 <!-- <h1 align="center">
   <br>
   9조 이러다졸업조 UpCrew
@@ -8,7 +26,7 @@
 <p align="center">
   <a href="#key-features">수정 필요</a> •
   <a href="#프로젝트-개요">프로젝트 개요</a> •
-  <a href="#팀원-명단-및-역할">팀원 명단 및 역할</a> •
+  <a href="#팀 구성">팀 구성</a> •
   <a href="#key-features">Key Features</a> •
   <a href="#실행-방법">실행 방법</a> •
   <a href="#실행-환경">실행 환경</a> •
@@ -17,34 +35,75 @@
   <a href="#license">License</a>
 </p> -->
 
-# 한신대학교 학생학습지원앱 README
+# 📖 한신대학교 학생학습지원앱 README
 ![깃허브_일러스트](./깃허브_일러스트.png)
 
-## 프로젝트 소개
-한신대학교 학생학습지원앱은 하나의 통합된 플랫폼에서 좌석 예약 및 공간 혼잡도 확인, LMS 기능을 제공하는 학생학습지원 애플리케이션이다.
+<br>
 
-## 팀원 명단 및 역할
-* 이나경()
-* 이민정()
-* 전채영()
+## 프로젝트 소개
+한신대학교 학생학습지원앱은 하나의 통합 플랫폼에서 학습시설 혼잡도 확인, 예약 및 Leaning Management System(LMS) 기능을 제공하는 모바일 애플리케이션이다.
+
+<br>
+
+## 팀명 및 팀 구성
+### 팀명
+* 9조 - 이러다졸업조 (UPCrew)
+
+### 팀 구성
+* 전채영 (팀장. AISW계열 소프트웨어)
+* 이나경 (팀원. AISW계열 소프트웨어/인공지능)
+* 이민정 (팀원. AISW계열 데이터사이언스/소프트웨어)
+
+<br>
+
+## 개발 환경
+* **Front-end**: 
+* **Back-end**: 
+* **UI/UX Design**: Figma
+* **Collaboration Tools**: Discord, KakaoTalk, GitHub, Figma
   
-## Key Features
-* 공간 혼잡도 확인
+<br>
+
+## 역할 분담
+### 전채영
+* **DB**
+  - 한 내용 적기
+  
+<br>
+
+### 이나경
+* **AI**
+  - 한 내용 적기
+
+<br>
+
+### 이민정
+* **UI/UX**
+  - 한 내용 적기
+ 
+<br>
+
+  
+## 핵심 기능
+### 학습 시설 혼잡도 확인
   - OpenCV를 활용해 공간 내 인원 수를 파악
-  - 혼잡도 상태를 "여유/ 보통 / 혼집" 3단계로 표시
-  - 사용자가 실시간으로 각 공간 (카페, 라운지 등)의 이용현황을 확인 가능
-* 좌석 예약 시스템
+  - 혼잡도 상태를 "여유/ 보통 / 혼잡" 3단계로 표시
+  - 사용자가 실시간으로 각 공간 (카페, 라운지 등)의 이용현황 확인 가능
+    
+### 좌석 예약 시스템
   - 도서관, 스터디룸 등 예약이 필요한 공간에 대해 좌석 선택 및 예약 가능
   - 예약 시 해당 좌석은 자동으로 '사용 중' 상태로 전환
-* LMS 연동 기능
+    
+### LMS 연동 기능
   - 학교 LMS와 연동하여 과제, 공지, 강의 일정 등을 앱에서 바로 확인 가능
   - 개인 일정 관리 및 알림 기능 제공
   - 푸시 알림으로 마감 기한 임박한 과제 및 강의 알림 가능
-* 사용자 인증 및 권한 관리
+    
+### 사용자 인증 및 권한 관리
   - 회원 가입 및 로그인 기능 제공
   - 학생 / 교수 구분에 따른 접근 권한 설정
  
-
+<br>
 
 ## 시스템 서버 및 아키텍처
 
@@ -67,14 +126,13 @@ $ npm start
 > **Note**
 > If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
 
+<br>
 
-## UIUX 
+## UI/UX 
 
 UIUX 앱 [디자인](https://www.figma.com/design/Z9tQCgVkBRwPdPOc9ZHZh1/%EC%BA%A1%EB%94%94_%EC%9D%B4%EB%9F%AC%EB%8B%A4%EC%A1%B8%EC%97%85?node-id=0-1&t=YM0C7m7QOdhPkOWA-1) 결과를 확인할 수 있다.
 
-
-## 
-
+<br>
 
 ## Credits
 
