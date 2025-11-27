@@ -1,4 +1,4 @@
-<h1 align="center">
+<!-- <h1 align="center">
   <br>
   9조 이러다졸업조 UpCrew
   <br>
@@ -15,9 +15,9 @@
   <a href="#credits">Credits</a> •
   <a href="#related">Related</a> •
   <a href="#license">License</a>
-</p>
+</p> -->
 
-## 한신대학교 학생학습지원앱 README
+# 한신대학교 학생학습지원앱 README
 ![깃허브_일러스트](./깃허브_일러스트.png)
 
 ## 프로젝트 소개
