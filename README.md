@@ -88,7 +88,7 @@
 * **(주) DB**
   - 한 내용 적기
 * 모바일 프로그래밍(Android Studio)
-  - 
+  - tmp
   
 <br>
 
@@ -96,7 +96,7 @@
 * **(주) AI**
   - 한 내용 적기
 * 모바일 프로그래밍(Android Studio)
-  - 
+  - tmp
 
 <br>
 
