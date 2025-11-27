@@ -151,7 +151,7 @@ FIGMA 작업 페이지: [캡스톤디자인_이러다졸업(UPCrue)_FIGMA](https
 ### [메인 화면]
 | 메인 화면 |
 |----------|
-| ![메인 화면](images/upcrew_main.png) |
+| <img src="images/upcrew_main.png" width="400"/> |
 
 <br>
 
