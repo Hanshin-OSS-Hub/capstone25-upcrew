@@ -134,8 +134,21 @@ $ npm start
 <br>
 
 ## UI/UX 
+FIGMA 작업 페이지: [캡스톤디자인_이러다졸업(UPCrue)_FIGMA](https://www.figma.com/design/Z9tQCgVkBRwPdPOc9ZHZh1/%EC%BA%A1%EB%94%94_%EC%9D%B4%EB%9F%AC%EB%8B%A4%EC%A1%B8%EC%97%85?node-id=0-1&t=YM0C7m7QOdhPkOWA-1)
 
-UIUX 앱 [디자인](https://www.figma.com/design/Z9tQCgVkBRwPdPOc9ZHZh1/%EC%BA%A1%EB%94%94_%EC%9D%B4%EB%9F%AC%EB%8B%A4%EC%A1%B8%EC%97%85?node-id=0-1&t=YM0C7m7QOdhPkOWA-1) 결과를 확인할 수 있다.
+### [시작/로그인 화면]
+* 시작 화면
+  - 애플리케이션 실행 시 표기되는 화면
+* 로그인 화면
+  - 시작 화면 직후 표기되는 화면
+  - 한신대학교 통합로그인 정보로만 로그인 가능
+  - 저장된 로그인 계정이 있는 경우 생략
+    
+| 시작 화면(좌) / 로그인 화면(우) |
+|----------|
+| ![시작/로그인 화면](images/upcrew_login.png) |
+
+### [메인 화면]
 
 <br>
 
