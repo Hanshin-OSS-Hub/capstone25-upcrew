@@ -36,7 +36,7 @@
 
 <br>
 
-# 📖 한신대학교 학생학습지원앱 README
+# 📝 한신대학교 학생학습지원앱 README
 ![README_IMAGE](images/github_readme.png)
 
 <br>
