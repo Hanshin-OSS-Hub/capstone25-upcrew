@@ -13,7 +13,7 @@
 11. 개발 기간
 12. 프로젝트 후기
 
-*DB 다이어그램 넣기
+*DB다이어그램 넣기/실행방법 넣기
 ```
 
 <br>
@@ -30,19 +30,7 @@
   <a href="#프로젝트-개요">프로젝트 개요</a> •
   <a href="#팀 구성">팀 구성</a> •
   <a href="#key-features">Key Features</a> •
-  <a href="#실행-방법">실행 방법</a> •
-  <a href="#실행-환경">실행 환경</a> •
-  <a href="#credits">Credits</a> •
-  <a href="#related">Related</a> •
-  <a href="#license">License</a>
-</p> -->
-
-# 📖 한신대학교 학생학습지원앱 README
-![깃허브_일러스트](images/github_readme.png)
-
-<br>
-
-## 1. 프로젝트 소개
+  <a href="#실행-방법">실행 방법</a> •요
 한신대학교 학생학습지원앱은 하나의 통합 플랫폼에서 학습시설 혼잡도 확인, 예약 및 Learning Management System(LMS) 기능을 제공하는 모바일 애플리케이션이다.
 
 <br>
