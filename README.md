@@ -193,9 +193,9 @@ FIGMA 작업 페이지: [캡스톤디자인_이러다졸업(UPCrew)_FIGMA](https
   - [중단 강의리스트 스크롤] 수강 강의 목록 확인
   - [강의 카드] 강의명, 분반, 담당교수명, 구분(학점), 학수번호 표기
  
-| 강의실 화면 |
-|----------|
-| <img src="images/upcrew_LMS.png" width="400"/> |
+| 과목공지 화면 | 학습자료 화면 | 과제제출 화면 | 과제제출 화면 |
+|------|------|------|------|
+| <img src="images/upcrew_LMS_notice.png" width="400"/> | <img src="images/upcrew_LMS_material.png" width="400"/> | <img src="images/upcrew_LMS_report.png" width="400"/> | <img src="images/upcrew_LMS_std.png" width="400"/> |
 
 <br>
 
