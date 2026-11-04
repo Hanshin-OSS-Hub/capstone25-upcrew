@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="hs_color">#FF3B1E87</color>
+    <color name="light_gray">#99F9F9F9</color>
+    <color name="gray">#FF757575</color>
+    <color name="divider">#1F000000</color>
+    <color name="bg_color">#FFF9F9F9</color>
+    <color name="chip_busy">#E57373</color>
+    <color name="chip_normal">#FFD54F</color>
+    <color name="chip_free">#81C784</color>
+    <color name="click_text">#5E35B1</color>
+    <color name="gray_card">#E0E0E0</color>
+    <color name="gray_text">#444444</color>
+    <color name="light_purple">#C2BBD8</color>
+    <color name="red">#E45B5B</color>
+    <color name="purple">#3B1E87</color>
+    <color name="transparent">#00000000</color>
+    <color name="seat_green">#A9DF79</color>
+    <color name="seat_orange">#FFC251</color>
+    <color name="seat_red">#DA5050</color>
+    <color name="time_or">#E0E0E0</color>
+</resources>

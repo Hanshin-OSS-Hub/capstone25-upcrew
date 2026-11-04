@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardElevation="1dp"
+    app:cardCornerRadius="12dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- 상단 라벨 구역-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/gray"/>
+
+        <!-- 내용 영역 -->
+        <RelativeLayout
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp">
+
+                <TextView
+                    android:id="@+id/tvCourseTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AISW캡스톤디자인 (D반)"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/tvCourseProfessor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="교수명: 김교수"
+                    android:textSize="14sp"
+                    android:textColor="@color/gray_text"
+                    android:layout_marginTop="4dp"/>
+
+                <TextView
+                    android:id="@+id/tvCourseCredit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="구분: 3학점"
+                    android:textSize="14sp"
+                    android:textColor="@color/gray_text"/>
+
+                <TextView
+                    android:id="@+id/tvCourseCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="학수번호: SH402"
+                    android:textSize="14sp"
+                    android:textColor="@color/gray_text"/>
+            </LinearLayout>
+
+            <!-- 오른쪽 이동 버튼 -->
+            <ImageView
+                android:layout_marginRight="10dp"
+                android:id="@+id/btnNext"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_chevron_right"
+                android:tint="@color/black"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

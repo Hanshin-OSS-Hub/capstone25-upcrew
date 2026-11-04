@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/tab_home" android:title="메인" android:icon="@drawable/menu_home"/>
+    <item android:id="@+id/tab_timetable" android:title="일정" android:icon="@drawable/menu_data_today"/>
+    <item android:id="@+id/tab_board" android:title="알림" android:icon="@drawable/menu_notifications_none"/>
+    <item android:id="@+id/tab_settings" android:title="설정" android:icon="@drawable/menu_setting_line"/>
+</menu>
