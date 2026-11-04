@@ -1,0 +1,955 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color">
+
+    <include
+        android:id="@+id/include_header"
+        layout="@layout/view_top_header"
+        android:layout_width="0dp"
+        android:layout_height="180dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 하단 네비 -->
+    <include
+        android:id="@+id/include_bottom_nav"
+        layout="@layout/view_bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/include_header"
+        app:layout_constraintBottom_toTopOf="@id/include_bottom_nav"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 제목 카드 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSchedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp"
+                app:cardBackgroundColor="@color/white">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    android:text="경삼관 | 3F 열람실"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 날짜 텍스트 -->
+            <TextView
+                android:id="@+id/tvTodayDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2026년 04월 02일"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"/>
+
+            <!-- 좌석 배치 -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- 좌석 버튼들 (기존과 동일) -->
+                    <TableRow>
+                        <androidx.appcompat.widget.AppCompatButton
+                            style="@style/SeatEmptyButton"/>
+                        <androidx.appcompat.widget.AppCompatButton
+                            style="@style/SeatEmptyButton"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            style="@style/SeatEmptyButton"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            style="@style/SeatEmptyButton"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            style="@style/SeatEmptyButton"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            style="@style/SeatEmptyButton"/>
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_94"
+                            style="@style/SeatButton_partition"
+                            android:text="94" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_93"
+                            style="@style/SeatButton_partition"
+                            android:text="93" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_92"
+                            style="@style/SeatButton_partition"
+                            android:text="92" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_91"
+                            style="@style/SeatButton_partition"
+                            android:text="91" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_90"
+                            style="@style/SeatButton_partition"
+                            android:text="90" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_32"
+                            style="@style/SeatButton_partition"
+                            android:text="32" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_31"
+                            style="@style/SeatButton_partition"
+                            android:text="31" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_30"
+                            style="@style/SeatButton_partition"
+                            android:text="30" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_29"
+                            style="@style/SeatButton_partition"
+                            android:text="29" />
+                    </TableRow>
+
+                    <TableRow>
+                        <androidx.appcompat.widget.AppCompatButton
+                            style="@style/SeatEmptyButton"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            style="@style/SeatEmptyButton"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            style="@style/SeatEmptyButton"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            style="@style/SeatEmptyButton"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            style="@style/SeatEmptyButton"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            style="@style/SeatEmptyButton"/>
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_85"
+                            style="@style/SeatButton_partition"
+                            android:text="85" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_86"
+                            style="@style/SeatButton_partition"
+                            android:text="86" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_87"
+                            style="@style/SeatButton_partition"
+                            android:text="87" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_88"
+                            style="@style/SeatButton_partition"
+                            android:text="88" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_89"
+                            style="@style/SeatButton_partition"
+                            android:text="89" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_25"
+                            style="@style/SeatButton_partition"
+                            android:text="25" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_26"
+                            style="@style/SeatButton_partition"
+                            android:text="26" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_27"
+                            style="@style/SeatButton_partition"
+                            android:text="27" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_28"
+                            style="@style/SeatButton_partition"
+                            android:text="28" />
+                    </TableRow>
+                    <TableRow>
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"/>
+                    </TableRow>
+
+                    <TableRow>
+                        <Button
+                            style="@style/SeatEmptyButton"/>
+                        <Button
+                            style="@style/SeatEmptyButton"/>
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_81"
+                            style="@style/SeatButton_general"
+                            android:text="81" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_82"
+                            style="@style/SeatButton_general"
+                            android:text="82" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_83"
+                            style="@style/SeatButton_general"
+                            android:text="83" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_84"
+                            style="@style/SeatButton_general"
+                            android:text="84" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_36"
+                            style="@style/SeatButton_partition"
+                            android:text="36" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_35"
+                            style="@style/SeatButton_partition"
+                            android:text="35" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_34"
+                            style="@style/SeatButton_partition"
+                            android:text="34" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_33"
+                            style="@style/SeatButton_partition"
+                            android:text="33" />
+
+                        <Button
+                            style="@style/SeatEmptyButton"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <Button
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_24"
+                            style="@style/SeatButton_partition"
+                            android:text="24" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_23"
+                            style="@style/SeatButton_partition"
+                            android:text="23" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_22"
+                            style="@style/SeatButton_partition"
+                            android:text="22" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_21"
+                            style="@style/SeatButton_partition"
+                            android:text="21" />
+                    </TableRow>
+                    <TableRow>
+                        <Button
+                            style="@style/SeatEmptyButton"/>
+                        <Button
+                            style="@style/SeatEmptyButton"/>
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_80"
+                            style="@style/SeatButton_general"
+                            android:text="80" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_79"
+                            style="@style/SeatButton_general"
+                            android:text="79" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_78"
+                            style="@style/SeatButton_general"
+                            android:text="78" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_77"
+                            style="@style/SeatButton_general"
+                            android:text="77" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_37"
+                            style="@style/SeatButton_partition"
+                            android:text="37" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_38"
+                            style="@style/SeatButton_partition"
+                            android:text="38" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_39"
+                            style="@style/SeatButton_partition"
+                            android:text="39" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_40"
+                            style="@style/SeatButton_partition"
+                            android:text="40" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            style="@style/SeatEmptyButton"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_17"
+                            style="@style/SeatButton_partition"
+                            android:text="17" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_18"
+                            style="@style/SeatButton_partition"
+                            android:text="18" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_19"
+                            style="@style/SeatButton_partition"
+                            android:text="19" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_20"
+                            style="@style/SeatButton_partition"
+                            android:text="20" />
+                    </TableRow>
+                    <TableRow>
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"/>
+                    </TableRow>
+
+                    <TableRow>
+                        <Button
+                            style="@style/SeatEmptyButton"/>
+                        <Button
+                            style="@style/SeatEmptyButton"/>
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_73"
+                            style="@style/SeatButton_general"
+                            android:text="73" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_74"
+                            style="@style/SeatButton_general"
+                            android:text="74" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_75"
+                            style="@style/SeatButton_general"
+                            android:text="75" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_76"
+                            style="@style/SeatButton_general"
+                            android:text="76" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_44"
+                            style="@style/SeatButton_partition"
+                            android:text="44" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_43"
+                            style="@style/SeatButton_partition"
+                            android:text="43" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_42"
+                            style="@style/SeatButton_partition"
+                            android:text="42" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_41"
+                            style="@style/SeatButton_partition"
+                            android:text="41" />
+
+                        <Button
+                            style="@style/SeatEmptyButton"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_16"
+                            style="@style/SeatButton_partition"
+                            android:text="16" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_15"
+                            style="@style/SeatButton_partition"
+                            android:text="15" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_14"
+                            style="@style/SeatButton_partition"
+                            android:text="14" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_13"
+                            style="@style/SeatButton_partition"
+                            android:text="13" />
+                    </TableRow>
+                    <TableRow>
+                        <Button
+                            style="@style/SeatEmptyButton"/>
+                        <Button
+                            style="@style/SeatEmptyButton"/>
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_72"
+                            style="@style/SeatButton_general"
+                            android:text="72" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_71"
+                            style="@style/SeatButton_general"
+                            android:text="71" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_70"
+                            style="@style/SeatButton_general"
+                            android:text="70" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_69"
+                            style="@style/SeatButton_general"
+                            android:text="69" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_45"
+                            style="@style/SeatButton_partition"
+                            android:text="45" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_46"
+                            style="@style/SeatButton_partition"
+                            android:text="46" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_47"
+                            style="@style/SeatButton_partition"
+                            android:text="47" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_48"
+                            style="@style/SeatButton_partition"
+                            android:text="48" />
+
+                        <Button
+                            style="@style/SeatEmptyButton"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_9"
+                            style="@style/SeatButton_partition"
+                            android:text="9" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_10"
+                            style="@style/SeatButton_partition"
+                            android:text="10" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_11"
+                            style="@style/SeatButton_partition"
+                            android:text="11" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_12"
+                            style="@style/SeatButton_partition"
+                            android:text="12" />
+                    </TableRow>
+                    <TableRow>
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"/>
+                    </TableRow>
+                    <TableRow>
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_63"
+                            style="@style/SeatButton_general"
+                            android:text="63" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_64"
+                            style="@style/SeatButton_general"
+                            android:text="64" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_65"
+                            style="@style/SeatButton_general"
+                            android:text="65" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_66"
+                            style="@style/SeatButton_general"
+                            android:text="66" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_67"
+                            style="@style/SeatButton_general"
+                            android:text="67" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_68"
+                            style="@style/SeatButton_general"
+                            android:text="68" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_52"
+                            style="@style/SeatButton_partition"
+                            android:text="52" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_51"
+                            style="@style/SeatButton_partition"
+                            android:text="51" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_50"
+                            style="@style/SeatButton_partition"
+                            android:text="50" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_49"
+                            style="@style/SeatButton_partition"
+                            android:text="49" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            style="@style/SeatEmptyButton"/>
+
+                        <Button
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <Button
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_8"
+                            style="@style/SeatButton_partition"
+                            android:text="8" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_7"
+                            style="@style/SeatButton_partition"
+                            android:text="7" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_6"
+                            style="@style/SeatButton_partition"
+                            android:text="6" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_5"
+                            style="@style/SeatButton_partition"
+                            android:text="5" />
+                    </TableRow>
+                    <TableRow>
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_62"
+                            style="@style/SeatButton_general"
+                            android:text="62" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_61"
+                            style="@style/SeatButton_general"
+                            android:text="61" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_60"
+                            style="@style/SeatButton_general"
+                            android:text="60" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_59"
+                            style="@style/SeatButton_general"
+                            android:text="59" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_58"
+                            style="@style/SeatButton_general"
+                            android:text="58" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_57"
+                            style="@style/SeatButton_general"
+                            android:text="57" />
+
+                        <Button
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <Button
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_53"
+                            style="@style/SeatButton_partition"
+                            android:text="53" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_54"
+                            style="@style/SeatButton_partition"
+                            android:text="54" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_55"
+                            style="@style/SeatButton_partition"
+                            android:text="55" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_56"
+                            style="@style/SeatButton_partition"
+                            android:text="56" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            style="@style/SeatEmptyButton"/>
+
+                        <Button
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <Button
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/transparent"
+                            android:enabled="false"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_1"
+                            style="@style/SeatButton_partition"
+                            android:text="1" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_2"
+                            style="@style/SeatButton_partition"
+                            android:text="2" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_3"
+                            style="@style/SeatButton_partition"
+                            android:text="3" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/seat_4"
+                            style="@style/SeatButton_partition"
+                            android:text="4" />
+                    </TableRow>
+
+                </TableLayout>
+            </HorizontalScrollView>
+
+            <!-- 범례 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="7dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+                    <Button android:layout_width="40dp" android:layout_height="40dp" android:backgroundTint="@color/seat_green"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:padding="10dp" android:text="일반" android:textColor="@android:color/black" android:textStyle="bold" android:textSize="15sp"/>
+                    <Button android:layout_width="40dp" android:layout_height="40dp" android:backgroundTint="@color/seat_orange"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:padding="10dp" android:text="칸막이" android:textColor="@android:color/black" android:textStyle="bold" android:textSize="15sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+                    <Button android:layout_width="40dp" android:layout_height="40dp" android:backgroundTint="@color/seat_red"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:padding="10dp" android:text="사용중" android:textColor="@android:color/black" android:textStyle="bold" android:textSize="15sp"/>
+                    <Button android:layout_width="40dp" android:layout_height="40dp" android:backgroundTint="@color/purple"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:padding="10dp" android:text="선택함" android:textColor="@android:color/black" android:textStyle="bold" android:textSize="15sp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 시간 선택 카드 (1번 문서 방식) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <LinearLayout
+                        android:id="@+id/timeGrid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/time09"
+                                style="@style/TimeButton"
+                                android:layout_weight="1"
+                                android:text="09:00"/>
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/time10"
+                                style="@style/TimeButton"
+                                android:layout_weight="1"
+                                android:text="10:00"/>
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/time11"
+                                style="@style/TimeButton"
+                                android:layout_weight="1"
+                                android:text="11:00"/>
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/time12"
+                                style="@style/TimeButton"
+                                android:layout_weight="1"
+                                android:text="12:00"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/time13"
+                                style="@style/TimeButton"
+                                android:layout_weight="1"
+                                android:text="13:00"/>
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/time14"
+                                style="@style/TimeButton"
+                                android:layout_weight="1"
+                                android:text="14:00"/>
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/time15"
+                                style="@style/TimeButton"
+                                android:layout_weight="1"
+                                android:text="15:00"/>
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/time16"
+                                style="@style/TimeButton"
+                                android:layout_weight="1"
+                                android:text="16:00"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/time17"
+                                style="@style/TimeButton"
+                                android:layout_weight="1"
+                                android:text="17:00"/>
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/time18"
+                                style="@style/TimeButton"
+                                android:layout_weight="1"
+                                android:text="18:00"/>
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/time19"
+                                style="@style/TimeButton"
+                                android:layout_weight="1"
+                                android:text="19:00"/>
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/time20"
+                                style="@style/TimeButton"
+                                android:layout_weight="1"
+                                android:text="20:00"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="4">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/time21"
+                                style="@style/TimeButton"
+                                android:layout_weight="1"
+                                android:text="21:00"/>
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/time22"
+                                style="@style/TimeButton"
+                                android:layout_weight="1"
+                                android:text="22:00"/>
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/time23"
+                                style="@style/TimeButton"
+                                android:layout_weight="1"
+                                android:text="23:00"/>
+                            <!-- 4칸 맞추기용 빈 공간 -->
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 예약 버튼 -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnReserve"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:text="예약하기"
+                android:textColor="@color/white"
+                app:cornerRadius="12dp"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <include
+        android:id="@+id/include_bottom_nav"
+        layout="@layout/view_bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

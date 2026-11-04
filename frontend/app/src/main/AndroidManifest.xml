@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.CapstonProject">
+        <activity
+            android:name=".SubjectAssignmentSubmitActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubjectAssignmentDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReadingRoomReservationConfirmActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReadingRoomReservationListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubjectAssignmentSubmittedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubjectClassDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AlarmSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NoticeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NotificationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CalendarActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubjectMaterialDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubjectNoticeDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MeetingRoomReservationConfirmActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MeetingRoomReservationListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReserveStudyroomActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MeetingRoomActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubjectMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LectureListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FacilityActivity"
+            android:exported="false" /> <!-- 시작 화면의 테마를 스플래시 테마로 설정 -->
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+    </application>
+
+</manifest>

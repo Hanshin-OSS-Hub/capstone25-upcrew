@@ -1,0 +1,17 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- 기본 앱 테마 -->
+    <style name="Base.Theme.CapstonProject" parent="Theme.Material3.DayNight.NoActionBar">
+    </style>
+
+    <style name="Theme.CapstonProject" parent="Base.Theme.CapstonProject" />
+
+    <!-- 스플래시 전용 테마 -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <!-- 배경색 -->
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <!-- 여백을 주어 작게 만든 로고 드로어블 적용 -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo_scaled</item>
+        <!-- 스플래시 종료 후 보여줄 테마 -->
+        <item name="postSplashScreenTheme">@style/Theme.CapstonProject</item>
+    </style>
+</resources>

@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">MyCapstonAppFirst</string>
+    <string name="login_id">ID</string>
+    <string name="login_pw">Password</string>
+    <string name="saveID_PW">saved ID/PW</string>
+    <string name="login">로그인</string>
+    <string name="hello">김한신 님,\n반갑습니다.</string>
+    <string name="student_info">%1$d 학생정보 / %2$s / %3$d학년</string>
+
+    <!-- 헤더 -->
+    <string name="title_facility">학습 시설</string>
+    <string name="title_lecture_list">강의리스트</string>
+
+    <!-- 건물명 -->
+    <string name="building_6_title">6관 │ 경삼관 (중앙도서관)</string>
+    <string name="building_18_title">18관 │ 장준하통일관</string>
+    <string name="building_9_title">9관 │ 학과실습동</string>
+
+    <!-- 층/시설 이름 -->
+    <string name="floor_1_komjirak">1F │ 꼼지락</string>
+    <string name="floor_1_lounge">1F │ 라운지</string>
+    <string name="floor_1_lounge_front">1F │ 라운지 (꼼지락 앞)</string>
+    <string name="floor_1_kumteul">1F │ 꿈뜰</string>
+
+    <string name="floor_3_meeting">3F │ 회의실</string>
+    <string name="floor_4_reading">4F │ 열람실</string>
+
+
+    <!-- 상태 -->
+    <string name="status_busy">혼잡</string>
+    <string name="status_normal">보통</string>
+    <string name="status_free">여유</string>
+
+    <!-- 행동 -->
+    <string name="action_reserve">예약하기</string>
+    <string name="action_history">내역</string>
+
+</resources>
