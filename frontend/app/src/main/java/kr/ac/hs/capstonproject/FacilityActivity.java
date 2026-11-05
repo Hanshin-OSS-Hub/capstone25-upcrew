@@ -33,6 +33,10 @@ public class FacilityActivity extends AppCompatActivity {
         setupBottomNavigation();
         loadCongestion();
 
+        if (mAuth.getCurrentUser() == null) {
+            finish();
+            return;
+        }
         String userUid = mAuth.getCurrentUser().getUid();
 
         // 헤더

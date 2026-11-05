@@ -20,6 +20,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LectureListActivity extends AppCompatActivity {
 
     private LinearLayout cardContainer;
@@ -48,12 +51,22 @@ public class LectureListActivity extends AppCompatActivity {
     }
 
     private void loadMyCourses() {
+        if (mAuth.getCurrentUser() == null) {
+            return;
+        }
         String uid = mAuth.getCurrentUser().getUid();
 
         db.collection("Users").document(uid).collection("myCourses")
                 .whereEqualTo("isActive", true)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
+                    List<String> activeCourseIds = new ArrayList<>();
+                    for (var doc : querySnapshot.getDocuments()) {
+                        String id = doc.getString("courseId");
+                        if (id != null) activeCourseIds.add(id);
+                    }
+                    NotificationTopics.syncSubscriptions(this, activeCourseIds);
+
                     for (var doc : querySnapshot.getDocuments()) {
                         String courseId = doc.getString("courseId");
                         if (courseId == null) continue;

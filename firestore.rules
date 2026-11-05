@@ -1,0 +1,96 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/Users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/Users/$(request.auth.uid)).data.get('isAdmin', false) == true;
+    }
+
+    // Users/{uid} — 본인 프로필: 본인 또는 관리자만 조회, 본인은 isAdmin 필드를 스스로 바꿀 수 없음
+    match /Users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid);
+      allow update: if isAdmin()
+        || (isOwner(uid)
+            && request.resource.data.get('isAdmin', false) == resource.data.get('isAdmin', false));
+      allow delete: if isAdmin();
+
+      match /myCourses/{courseId} {
+        allow read, write: if isOwner(uid) || isAdmin();
+      }
+
+      match /myTasks/{taskId} {
+        allow read, write: if isOwner(uid) || isAdmin();
+      }
+    }
+
+    // Courses — 로그인한 사용자는 전체 조회 가능, 쓰기는 관리자만
+    match /Courses/{courseId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+
+      match /notices/{id} {
+        allow read: if isSignedIn();
+        allow write: if isAdmin();
+      }
+      match /materials/{id} {
+        allow read: if isSignedIn();
+        allow write: if isAdmin();
+      }
+      match /assignments/{id} {
+        allow read: if isSignedIn();
+        allow write: if isAdmin();
+
+        // 과제 제출물 — 문서 ID = 제출한 학생의 uid. 본인 또는 관리자만 조회/수정 가능
+        match /submissions/{uid} {
+          allow read, write: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+        }
+      }
+      match /classes/{id} {
+        allow read: if isSignedIn();
+        allow write: if isAdmin();
+
+        // 수강(시청) 진행도 — 문서 ID = 학생의 uid. 본인 또는 관리자만 조회/수정 가능
+        match /progress/{uid} {
+          allow read, write: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+        }
+      }
+    }
+
+    // 시설 예약 — 조회(빈자리 확인)는 로그인한 사용자 전체 허용, 생성/취소는 본인만, 삭제는 관리자만
+    match /reservations/{roomType}/{roomType2}/{resId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.userUid == request.auth.uid;
+      allow update: if isSignedIn() && (resource.data.userUid == request.auth.uid || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // 혼잡도 — 로그인한 사용자는 조회만, 수정은 관리자만
+    match /congestion/{doc} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // collection group 쿼리(관리자 페이지의 "이 강의 수강생 전체 조회" 등)는
+    // 위의 /Users/{uid}/myCourses 중첩 규칙이 자동으로 적용되지 않으므로 별도 선언 필요
+    match /{path=**}/myCourses/{courseId} {
+      allow read: if isAdmin();
+    }
+
+    // 그 외 모든 경로는 기본적으로 차단
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

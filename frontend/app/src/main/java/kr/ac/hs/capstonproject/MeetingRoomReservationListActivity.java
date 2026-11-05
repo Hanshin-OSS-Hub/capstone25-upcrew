@@ -29,6 +29,10 @@ public class MeetingRoomReservationListActivity extends AppCompatActivity {
         setupBottomNavigation();
 
         db = FirebaseFirestore.getInstance();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            finish();
+            return;
+        }
         userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         setupHeader();

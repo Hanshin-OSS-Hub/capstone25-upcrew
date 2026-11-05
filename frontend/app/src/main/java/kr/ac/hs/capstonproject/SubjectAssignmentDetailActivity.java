@@ -14,6 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -31,6 +32,7 @@ public class SubjectAssignmentDetailActivity extends AppCompatActivity {
 
     private String courseId;
     private String assignmentId;
+    private java.util.Date endAtDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +56,48 @@ public class SubjectAssignmentDetailActivity extends AppCompatActivity {
         layoutFiles = findViewById(R.id.layout_files);
 
         MaterialButton btnAssignmentInfo = findViewById(R.id.btnAssignmentInfo);
-        btnAssignmentInfo.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SubjectAssignmentSubmitActivity.class);
-            intent.putExtra("courseId", courseId);
-            intent.putExtra("assignmentId", assignmentId);
-            startActivity(intent);
-        });
+        btnAssignmentInfo.setOnClickListener(v -> goToSubmissionScreen());
 
         loadAssignment();
+    }
+
+    private void goToSubmissionScreen() {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        FirebaseFirestore.getInstance()
+                .collection("Courses").document(courseId)
+                .collection("assignments").document(assignmentId)
+                .collection("submissions").document(uid)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    boolean alreadySubmitted = doc.exists() && Boolean.TRUE.equals(doc.getBoolean("isSubmitted"));
+
+                    if (!alreadySubmitted && isDeadlinePassed()) {
+                        Toast.makeText(this, "제출 기간이 마감되었습니다.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    Intent intent = new Intent(this,
+                            alreadySubmitted ? SubjectAssignmentSubmittedActivity.class : SubjectAssignmentSubmitActivity.class);
+                    intent.putExtra("courseId", courseId);
+                    intent.putExtra("assignmentId", assignmentId);
+                    startActivity(intent);
+                })
+                .addOnFailureListener(e -> {
+                    if (isDeadlinePassed()) {
+                        Toast.makeText(this, "제출 기간이 마감되었습니다.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Intent intent = new Intent(this, SubjectAssignmentSubmitActivity.class);
+                    intent.putExtra("courseId", courseId);
+                    intent.putExtra("assignmentId", assignmentId);
+                    startActivity(intent);
+                });
+    }
+
+    private boolean isDeadlinePassed() {
+        return endAtDate != null && endAtDate.before(new java.util.Date());
     }
 
     private void loadAssignment() {
@@ -83,6 +119,7 @@ public class SubjectAssignmentDetailActivity extends AppCompatActivity {
 
                     Timestamp startAt = doc.getTimestamp("startAt");
                     Timestamp endAt = doc.getTimestamp("endAt");
+                    endAtDate = endAt != null ? endAt.toDate() : null;
 
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
 

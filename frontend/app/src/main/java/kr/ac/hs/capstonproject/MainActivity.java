@@ -1,6 +1,9 @@
 package kr.ac.hs.capstonproject;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -8,7 +11,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
 
+    private final ActivityResultLauncher<String> notificationPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> { });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -41,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         setupBottomNavigation();
+
+        UpCrewFirebaseMessagingService.createChannelIfNeeded(this);
+        requestNotificationPermissionIfNeeded();
 
         tvGreeting = findViewById(R.id.tvGreeting);
         tvStudentInfo = findViewById(R.id.tvStudentInfo);
@@ -66,65 +78,143 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    // 할 일 후보: [endAt(Date), courseName, label, courseId]
+    private final List<Object[]> upcomingCandidates = new ArrayList<>();
+
     private void loadUpcomingTasks() {
+        if (mAuth.getCurrentUser() == null) {
+            return;
+        }
         String uid = mAuth.getCurrentUser().getUid();
+        upcomingCandidates.clear();
 
-        db.collection("Users").document(uid).collection("myTasks")
-                .whereEqualTo("isDone", false)
-                .whereEqualTo("type", "assignment")
+        db.collection("Users").document(uid).collection("myCourses")
+                .whereEqualTo("isActive", true)
                 .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    List<DocumentSnapshot> tasks = querySnapshot.getDocuments();
-                    List<Object[]> taskInfoList = new ArrayList<>(); // [endAt, title, desc, refPath]
-                    int total = tasks.size();
-                    int[] loadedCount = {0}; // 콜백 완료 카운터
+                .addOnSuccessListener(myCoursesSnap -> {
+                    List<String> courseIds = new ArrayList<>();
+                    for (DocumentSnapshot d : myCoursesSnap.getDocuments()) {
+                        String cid = d.getString("courseId");
+                        if (cid != null) courseIds.add(cid);
+                    }
 
-                    if (total == 0) return;
+                    if (courseIds.isEmpty()) return;
 
-                    Date now = new Date();
+                    // 강의 하나당 "과제 조회"와 "강의 조회" 두 갈래가 끝나야 하므로 2배로 센다.
+                    int[] remainingBranches = {courseIds.size() * 2};
 
-                    for (DocumentSnapshot task : tasks) {
-                        String assignmentRefPath = task.getString("refPath");
-                        if (assignmentRefPath == null) {
-                            loadedCount[0]++;
-                            continue;
-                        }
-
-                        db.document(assignmentRefPath).get()
-                                .addOnSuccessListener(assignmentDoc -> {
-                                    if (assignmentDoc.exists()) {
-                                        Date endAt = assignmentDoc.getDate("endAt");
-                                        String courseName = assignmentDoc.getString("courseName");
-                                        String title = assignmentDoc.getString("title");
-
-                                        // 현재 시간 이후인 것만 (마감 안 된 것)
-                                        if (endAt != null && endAt.after(now)) {
-                                            taskInfoList.add(new Object[]{endAt, courseName,title, assignmentRefPath});
-                                        }
-                                    }
-
-
-                                    loadedCount[0]++;
-
-                                    // 모든 로드 완료 시 정렬 후 표시
-                                    if (loadedCount[0] == total) {
-                                        // endAt 기준 오름차순 정렬 (가까운 순)
-                                        taskInfoList.sort((a, b) -> ((Date) a[0]).compareTo((Date) b[0]));
-
-                                        for (int i = 0; i < Math.min(2, taskInfoList.size()); i++) {
-                                            Object[] info = taskInfoList.get(i);
-                                            String courseName = (String) info[1];
-                                            String title = (String) info[2];
-                                            String refPath = (String) info[3];
-                                            setUpcomingSubjectCard(i, courseName, title, refPath);
-                                        }
-                                    }
+                    for (String courseId : courseIds) {
+                        db.collection("Courses").document(courseId).get()
+                                .addOnSuccessListener(courseDoc -> {
+                                    String courseName = courseDoc.getString("courseName");
+                                    loadUpcomingAssignments(courseId, courseName, uid, remainingBranches);
+                                    loadUpcomingClasses(courseId, courseName, uid, remainingBranches);
+                                })
+                                .addOnFailureListener(e -> {
+                                    onBranchDone(remainingBranches);
+                                    onBranchDone(remainingBranches);
                                 });
                     }
                 });
     }
 
-    private void setUpcomingSubjectCard(int index, String title, String desc, String refPath) {
+    private void loadUpcomingAssignments(String courseId, String courseName, String uid, int[] remainingBranches) {
+        db.collection("Courses").document(courseId).collection("assignments")
+                .get()
+                .addOnSuccessListener(assignSnap -> {
+                    Date now = new Date();
+
+                    List<DocumentSnapshot> pending = new ArrayList<>();
+                    for (DocumentSnapshot aDoc : assignSnap.getDocuments()) {
+                        com.google.firebase.Timestamp endAtTs = aDoc.getTimestamp("endAt");
+                        if (endAtTs != null && endAtTs.toDate().after(now)) {
+                            pending.add(aDoc);
+                        }
+                    }
+
+                    if (pending.isEmpty()) {
+                        onBranchDone(remainingBranches);
+                        return;
+                    }
+
+                    int[] remainingAssignments = {pending.size()};
+                    for (DocumentSnapshot aDoc : pending) {
+                        db.collection("Courses").document(courseId)
+                                .collection("assignments").document(aDoc.getId())
+                                .collection("submissions").document(uid)
+                                .get()
+                                .addOnSuccessListener(subDoc -> {
+                                    boolean submitted = subDoc.exists() && Boolean.TRUE.equals(subDoc.getBoolean("isSubmitted"));
+                                    if (!submitted) {
+                                        Date endAt = aDoc.getTimestamp("endAt").toDate();
+                                        upcomingCandidates.add(new Object[]{endAt, courseName, "[과제] " + aDoc.getString("title"), courseId});
+                                    }
+                                    if (--remainingAssignments[0] == 0) onBranchDone(remainingBranches);
+                                })
+                                .addOnFailureListener(e -> {
+                                    if (--remainingAssignments[0] == 0) onBranchDone(remainingBranches);
+                                });
+                    }
+                })
+                .addOnFailureListener(e -> onBranchDone(remainingBranches));
+    }
+
+    private void loadUpcomingClasses(String courseId, String courseName, String uid, int[] remainingBranches) {
+        db.collection("Courses").document(courseId).collection("classes")
+                .get()
+                .addOnSuccessListener(classSnap -> {
+                    Date now = new Date();
+
+                    List<DocumentSnapshot> pending = new ArrayList<>();
+                    for (DocumentSnapshot cDoc : classSnap.getDocuments()) {
+                        com.google.firebase.Timestamp endAtTs = cDoc.getTimestamp("endAt");
+                        if (endAtTs != null && endAtTs.toDate().after(now)) {
+                            pending.add(cDoc);
+                        }
+                    }
+
+                    if (pending.isEmpty()) {
+                        onBranchDone(remainingBranches);
+                        return;
+                    }
+
+                    int[] remainingClasses = {pending.size()};
+                    for (DocumentSnapshot cDoc : pending) {
+                        db.collection("Courses").document(courseId)
+                                .collection("classes").document(cDoc.getId())
+                                .collection("progress").document(uid)
+                                .get()
+                                .addOnSuccessListener(progressDoc -> {
+                                    boolean completed = progressDoc.exists() && Boolean.TRUE.equals(progressDoc.getBoolean("completed"));
+                                    if (!completed) {
+                                        Date endAt = cDoc.getTimestamp("endAt").toDate();
+                                        upcomingCandidates.add(new Object[]{endAt, courseName, "[온라인강의] " + cDoc.getString("title"), courseId});
+                                    }
+                                    if (--remainingClasses[0] == 0) onBranchDone(remainingBranches);
+                                })
+                                .addOnFailureListener(e -> {
+                                    if (--remainingClasses[0] == 0) onBranchDone(remainingBranches);
+                                });
+                    }
+                })
+                .addOnFailureListener(e -> onBranchDone(remainingBranches));
+    }
+
+    private void onBranchDone(int[] remainingBranches) {
+        remainingBranches[0]--;
+        if (remainingBranches[0] == 0) {
+            upcomingCandidates.sort((a, b) -> ((Date) a[0]).compareTo((Date) b[0]));
+            for (int i = 0; i < Math.min(2, upcomingCandidates.size()); i++) {
+                Object[] info = upcomingCandidates.get(i);
+                String courseName = (String) info[1];
+                String label = (String) info[2];
+                String courseId = (String) info[3];
+                setUpcomingSubjectCard(i, courseName, label, courseId);
+            }
+        }
+    }
+
+    private void setUpcomingSubjectCard(int index, String title, String desc, String courseId) {
         LinearLayout layout = (index == 0) ? layoutUpcomingSubject1 : layoutUpcomingSubject2;
         layout.setVisibility(View.VISIBLE);
 
@@ -135,10 +225,6 @@ public class MainActivity extends AppCompatActivity {
         tvDesc.setText(desc);
 
         layout.setOnClickListener(v -> {
-            // "/Courses/2026_1_CSE101_A/assignments/assignment_001" 에서 courseId 파싱
-            String[] parts = refPath.split("/");
-            String courseId = parts[2];
-
             Intent intent = new Intent(this, SubjectMainActivity.class);
             intent.putExtra("courseId", courseId);
             startActivity(intent);
@@ -197,5 +283,14 @@ public class MainActivity extends AppCompatActivity {
 
             return false;
         });
+    }
+
+    private void requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return;
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+        }
     }
 }

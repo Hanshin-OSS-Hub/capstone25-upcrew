@@ -1,0 +1,22 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // 과제 제출 파일 — 제출한 본인만 읽기/쓰기 가능 (다른 학생에게는 비공개)
+    // Firestore 교차 조회(firestore.get) 없이 경로의 uid만으로 판단하므로
+    // Storage 서비스 에이전트에 별도 IAM 역할을 부여하지 않아도 동작한다.
+    match /assignment_submissions/{courseId}/{assignmentId}/{uid}/{fileName} {
+      allow read, write: if isSignedIn() && request.auth.uid == uid;
+    }
+
+    // 그 외(강의자료/영상/공지 첨부 등) — 로그인한 사용자는 읽기/쓰기 모두 가능
+    match /{allPaths=**} {
+      allow read, write: if isSignedIn();
+    }
+  }
+}
