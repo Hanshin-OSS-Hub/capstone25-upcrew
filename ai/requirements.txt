@@ -1,0 +1,17 @@
+# Python 3.10
+# 설치: pip install -r requirements.txt
+
+--extra-index-url https://download.pytorch.org/whl/cu128
+
+# 모델 / 추론
+ultralytics==8.4.58
+torch==2.10.0+cu128
+torchvision==0.25.0+cu128
+numpy==2.1.2
+
+# 이미지 처리 / 시각화
+opencv-python==4.12.0.88
+matplotlib==3.10.7
+
+# Firebase
+firebase_admin==7.4.0

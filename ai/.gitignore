@@ -1,0 +1,21 @@
+# Firebase 서비스 계정 키 (절대 커밋 금지)
+*firebase-adminsdk*.json
+serviceAccount*.json
+.env
+
+# 모델 가중치 (yolo11x.pt는 GitHub 100MB 제한 초과, 실행 시 자동 다운로드)
+*.pt
+
+# 촬영 사진 / 분석 결과 이미지
+*.jpg
+*.jpeg
+*.png
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 에디터
+.vscode/
