@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UpCrew 관리자</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<section id="login-section">
+  <form id="login-form" class="login-box">
+    <h1>UpCrew 관리자 로그인</h1>
+    <label>이메일 <input type="email" id="login-email" required /></label>
+    <label>비밀번호 <input type="password" id="login-password" required /></label>
+    <button type="submit">로그인</button>
+    <p id="login-error" class="error"></p>
+  </form>
+</section>
+
+<section id="app-section" class="hidden">
+  <header class="topbar">
+    <h1>UpCrew 관리자</h1>
+    <div class="topbar-right">
+      <span id="admin-name"></span>
+      <button id="logout-btn" class="btn-small">로그아웃</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="users">회원 관리</button>
+    <button class="tab-btn" data-tab="courses">강의 관리</button>
+    <button class="tab-btn" data-tab="reservations">시설 예약 관리</button>
+  </nav>
+
+  <main>
+    <!-- 회원 관리 -->
+    <section id="tab-users" class="tab-panel">
+      <h2>회원 관리</h2>
+      <input type="text" id="users-search" placeholder="이름 / 학번 / 이메일 검색" class="search-box" />
+      <table id="users-table">
+        <thead>
+          <tr><th>이름</th><th>학번</th><th>학과</th><th>이메일</th><th>관리자</th><th></th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- 강의 관리 -->
+    <section id="tab-courses" class="tab-panel hidden">
+      <h2>강의 관리</h2>
+      <div class="courses-layout">
+        <div class="course-sidebar">
+          <form id="course-form" class="inline-form">
+            <input id="course-name" placeholder="강의명" required />
+            <input id="course-code" placeholder="학수번호 (예: CSE101)" required />
+            <input id="course-year" placeholder="연도 (예: 2026)" required />
+            <input id="course-semester" placeholder="학기 (예: 1)" required />
+            <input id="course-section" placeholder="분반 (예: A)" required />
+            <input id="course-room" placeholder="강의실" />
+            <input id="course-professor" placeholder="담당교수" />
+            <input id="course-credit" type="number" placeholder="학점" />
+            <button type="submit">강의 추가</button>
+          </form>
+          <ul id="course-list"></ul>
+        </div>
+
+        <div id="course-detail" class="course-detail hidden">
+          <h3 id="course-detail-title"></h3>
+          <div id="sub-enrollment" class="sub-section"></div>
+          <div id="sub-notices" class="sub-section"></div>
+          <div id="sub-materials" class="sub-section"></div>
+          <div id="sub-assignments" class="sub-section"></div>
+          <div id="sub-classes" class="sub-section"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 시설 예약 관리 -->
+    <section id="tab-reservations" class="tab-panel hidden">
+      <h2>시설 예약 관리</h2>
+
+      <h3>열람실 예약</h3>
+      <table id="studyroom-table">
+        <thead><tr><th>날짜</th><th>시간</th><th>열람실</th><th>좌석</th><th>사용자 UID</th><th>상태</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+
+      <h3>회의실 예약</h3>
+      <table id="meetingroom-table">
+        <thead><tr><th>날짜</th><th>시작</th><th>종료</th><th>회의실</th><th>사용자 UID</th><th>상태</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+</section>
+
+<script type="module" src="js/firebase-config.js"></script>
+<script type="module" src="js/auth.js"></script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

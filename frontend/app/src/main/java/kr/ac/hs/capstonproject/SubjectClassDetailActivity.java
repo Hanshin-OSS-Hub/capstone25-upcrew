@@ -3,6 +3,8 @@ package kr.ac.hs.capstonproject;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,12 +13,18 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 
 import androidx.media3.common.MediaItem;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class SubjectClassDetailActivity extends AppCompatActivity {
 
@@ -30,6 +38,34 @@ public class SubjectClassDetailActivity extends AppCompatActivity {
     private String courseId;
     private String classId;
 
+    private FirebaseFirestore db;
+    private String uid;
+
+    private long requiredSeconds = 0;
+    private long watchedSeconds = 0;
+    private long lastSyncedSeconds = 0;
+    private boolean completed = false;
+
+    private final Handler tickHandler = new Handler(Looper.getMainLooper());
+    private final Runnable tick = new Runnable() {
+        @Override
+        public void run() {
+            if (player != null && player.isPlaying()) {
+                watchedSeconds++;
+                updateStudyTimeLabel();
+
+                if (!completed && watchedSeconds >= requiredSeconds && requiredSeconds > 0) {
+                    completed = true;
+                    Toast.makeText(SubjectClassDetailActivity.this, "수강이 완료되었습니다!", Toast.LENGTH_SHORT).show();
+                    syncProgress();
+                } else if (watchedSeconds - lastSyncedSeconds >= 5) {
+                    syncProgress();
+                }
+            }
+            tickHandler.postDelayed(this, 1000);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +74,11 @@ public class SubjectClassDetailActivity extends AppCompatActivity {
 
         courseId = getIntent().getStringExtra("courseId");
         classId = getIntent().getStringExtra("classId");
+
+        db = FirebaseFirestore.getInstance();
+        uid = FirebaseAuth.getInstance().getCurrentUser() != null
+                ? FirebaseAuth.getInstance().getCurrentUser().getUid()
+                : null;
 
         initViews();
         setupHeaderTitle();
@@ -66,11 +107,14 @@ public class SubjectClassDetailActivity extends AppCompatActivity {
         if (tvTitle != null) {
             tvTitle.setText("강의수강");
         }
+
+        View backBtn = header.findViewById(R.id.btn_back);
+        if (backBtn != null) {
+            backBtn.setOnClickListener(v -> finish());
+        }
     }
 
     private void loadClassDetail() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         db.collection("Courses")
                 .document(courseId)
                 .collection("classes")
@@ -88,6 +132,7 @@ public class SubjectClassDetailActivity extends AppCompatActivity {
                     Long durationSeconds = doc.getLong("durationSeconds");
                     String videoUrl = doc.getString("videoUrl");
 
+                    requiredSeconds = durationSeconds != null ? durationSeconds : 0;
 
                     if (weekNumber != null) {
                         tvWeekNumber.setText(String.valueOf(weekNumber));
@@ -96,8 +141,7 @@ public class SubjectClassDetailActivity extends AppCompatActivity {
                     // 아직 회차 필드가 없으면 일단 1회차로 고정
                     tvClassRound.setText("1");
 
-                    // 학습시간은 나중에 실제 시청 시간 기록용으로 쓸 거라 일단 초기값 유지
-                    tvStudyTime.setText("학습시간: 00:00:00");
+                    loadExistingProgress();
 
                     if (videoUrl == null || videoUrl.isEmpty()) {
                         Toast.makeText(this, "등록된 강의 영상이 없습니다.", Toast.LENGTH_SHORT).show();
@@ -109,6 +153,48 @@ public class SubjectClassDetailActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "강의 정보를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void loadExistingProgress() {
+        updateStudyTimeLabel();
+
+        if (uid == null) return;
+
+        db.collection("Courses").document(courseId)
+                .collection("classes").document(classId)
+                .collection("progress").document(uid)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        Long saved = doc.getLong("watchedSeconds");
+                        watchedSeconds = saved != null ? saved : 0;
+                        lastSyncedSeconds = watchedSeconds;
+                        completed = Boolean.TRUE.equals(doc.getBoolean("completed"));
+                    }
+                    updateStudyTimeLabel();
+                });
+    }
+
+    private void updateStudyTimeLabel() {
+        long h = watchedSeconds / 3600;
+        long m = (watchedSeconds % 3600) / 60;
+        long s = watchedSeconds % 60;
+        tvStudyTime.setText(String.format(Locale.KOREA, "학습시간: %02d:%02d:%02d", h, m, s));
+    }
+
+    private void syncProgress() {
+        if (uid == null) return;
+        lastSyncedSeconds = watchedSeconds;
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("watchedSeconds", watchedSeconds);
+        data.put("completed", completed);
+        data.put("updatedAt", com.google.firebase.firestore.FieldValue.serverTimestamp());
+
+        db.collection("Courses").document(courseId)
+                .collection("classes").document(classId)
+                .collection("progress").document(uid)
+                .set(data, SetOptions.merge());
     }
 
     private void playVideo(String videoUrl) {
@@ -136,6 +222,8 @@ public class SubjectClassDetailActivity extends AppCompatActivity {
         player.setMediaItem(mediaItem);
         player.prepare();
         player.setPlayWhenReady(false);
+
+        tickHandler.post(tick);
     }
 
     private void setupBottomNavigation() {
@@ -172,12 +260,15 @@ public class SubjectClassDetailActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        syncProgress();
         releasePlayer();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        tickHandler.removeCallbacks(tick);
+        syncProgress();
         releasePlayer();
     }
 

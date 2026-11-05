@@ -13,21 +13,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class SubjectAssignmentSubmittedActivity extends AppCompatActivity {
 
     private TextView tvAssignmentTitle;
+    private TextView tvSubmittedAt;
     private TextView tvAssignmentDescription;
     private LinearLayout layoutFiles;
     private MaterialCardView cardFiles;
+
+    private String courseId;
+    private String assignmentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,72 +42,79 @@ public class SubjectAssignmentSubmittedActivity extends AppCompatActivity {
         setupBottomNavigation();
 
         tvAssignmentTitle = findViewById(R.id.tvAssignmentTitle);
+        tvSubmittedAt = findViewById(R.id.tvSubmittedAt);
         tvAssignmentDescription = findViewById(R.id.tvAssignmentDescription);
         layoutFiles = findViewById(R.id.layout_files);
         cardFiles = findViewById(R.id.card_files);
 
-        String courseId = getIntent().getStringExtra("courseId");
-        String assignmentId = getIntent().getStringExtra("assignmentId");
+        courseId = getIntent().getStringExtra("courseId");
+        assignmentId = getIntent().getStringExtra("assignmentId");
 
-        loadAssignment(courseId, assignmentId);
+        findViewById(R.id.btnResubmit).setOnClickListener(v -> {
+            Intent intent = new Intent(this, SubjectAssignmentSubmitActivity.class);
+            intent.putExtra("courseId", courseId);
+            intent.putExtra("assignmentId", assignmentId);
+            startActivity(intent);
+            finish();
+        });
+
+        loadAssignmentTitle();
+        loadSubmission();
     }
 
-    private void loadAssignment(String courseId, String assignmentId) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("Courses")
-                .document(courseId)
-                .collection("assignments")
-                .document(assignmentId)
+    private void loadAssignmentTitle() {
+        FirebaseFirestore.getInstance()
+                .collection("Courses").document(courseId)
+                .collection("assignments").document(assignmentId)
                 .get()
                 .addOnSuccessListener(doc -> {
-                    if (!doc.exists()) return;
+                    if (doc.exists()) {
+                        tvAssignmentTitle.setText(doc.getString("title"));
+                    }
+                });
+    }
 
-                    String title = doc.getString("title");
-                    String description = doc.getString("description");
+    private void loadSubmission() {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+        FirebaseFirestore.getInstance()
+                .collection("Courses").document(courseId)
+                .collection("assignments").document(assignmentId)
+                .collection("submissions").document(uid)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (!doc.exists()) {
+                        tvAssignmentDescription.setText("제출 내역이 없습니다.");
+                        return;
+                    }
 
-                    Timestamp startAt = doc.getTimestamp("startAt");
-                    Timestamp endAt = doc.getTimestamp("endAt");
+                    String content = doc.getString("content");
+                    tvAssignmentDescription.setText(content != null && !content.isEmpty() ? content : "(제출 내용 없음)");
 
-                    SimpleDateFormat sdf =
-                            new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.KOREA);
+                    Timestamp submittedAt = doc.getTimestamp("submittedAt");
+                    if (submittedAt != null) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.KOREA);
+                        tvSubmittedAt.setText("제출일시: " + sdf.format(submittedAt.toDate()));
+                    }
 
-                    tvAssignmentTitle.setText(title != null ? title : "");
-                    tvAssignmentDescription.setText(description != null ? description : "");
+                    String fileName = doc.getString("fileName");
+                    String fileUrl = doc.getString("fileUrl");
 
-
-                    List<Map<String, Object>> files =
-                            (List<Map<String, Object>>) doc.get("files");
-
-                    if (files != null && !files.isEmpty()) {
+                    if (fileUrl != null && !fileUrl.isEmpty()) {
                         cardFiles.setVisibility(View.VISIBLE);
                         layoutFiles.removeAllViews();
 
-                        for (int i = 0; i < files.size(); i++) {
-                            Map<String, Object> file = files.get(i);
-
-                            String fileName = (String) file.get("fileName");
-                            String fileUrl = (String) file.get("fileUrl");
-
-                            TextView tvFile = new TextView(this);
-                            tvFile.setText("📎 " + (fileName != null ? fileName : "파일 " + (i + 1)));
-                            tvFile.setTextColor(getColor(R.color.black));
-                            tvFile.setTextSize(15);
-                            tvFile.setPadding(0, 0, 0, 16);
-
-                            if (fileUrl != null && !fileUrl.isEmpty()) {
-                                tvFile.setOnClickListener(v -> downloadFile(fileUrl));
-                            }
-
-                            layoutFiles.addView(tvFile);
-                        }
+                        TextView tvFile = new TextView(this);
+                        tvFile.setText("📎 " + (fileName != null ? fileName : "첨부파일"));
+                        tvFile.setTextColor(getColor(R.color.black));
+                        tvFile.setTextSize(15);
+                        tvFile.setOnClickListener(v -> downloadFile(fileUrl));
+                        layoutFiles.addView(tvFile);
                     }
                 })
-                .addOnFailureListener(e -> {
-                    tvAssignmentTitle.setText("불러오기 실패");
-                    tvAssignmentDescription.setText(e.getMessage());
-                });
+                .addOnFailureListener(e ->
+                        tvAssignmentDescription.setText("불러오기 실패: " + e.getMessage()));
     }
 
     private void downloadFile(String gsUrl) {

@@ -17,6 +17,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.List;
+
 public class SubjectMainActivity extends AppCompatActivity {
 
     private Button btnNotice, btnMaterial, btnAssignment, btnClass;
@@ -34,6 +36,10 @@ public class SubjectMainActivity extends AppCompatActivity {
 
         String courseId = getIntent().getStringExtra("courseId");
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if (com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser() == null) {
+            finish();
+            return;
+        }
         String uid = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         db.collection("Courses").document(courseId).get()
@@ -107,78 +113,92 @@ public class SubjectMainActivity extends AppCompatActivity {
     }
 
     private void loadAssignments(FirebaseFirestore db, String courseId, String uid) {
-        db.collection("Users").document(uid).collection("myTasks")
-                .whereEqualTo("type", "assignment")
+        db.collection("Courses").document(courseId).collection("assignments")
+                .orderBy("startAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
                 .get()
-                .addOnSuccessListener(taskSnapshot -> {
-
-                    java.util.Map<String, Boolean> doneMap = new java.util.HashMap<>();
-
-                    for (var taskDoc : taskSnapshot.getDocuments()) {
-                        String refPath = taskDoc.getString("refPath"); // 여기 중요!
-                        Boolean isDone = taskDoc.getBoolean("isDone");
-
-                        if (refPath != null) {
-                            doneMap.put(refPath, isDone != null && isDone);
-                        }
+                .addOnSuccessListener(assignmentSnapshot -> {
+                    List<com.google.firebase.firestore.DocumentSnapshot> docs = assignmentSnapshot.getDocuments();
+                    if (docs.isEmpty()) {
+                        layoutAssignment.removeAllViews();
+                        return;
                     }
 
-                    db.collection("Courses").document(courseId).collection("assignments")
-                            .orderBy("startAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
-                            .get()
-                            .addOnSuccessListener(assignmentSnapshot -> {
-                                layoutAssignment.removeAllViews();
+                    boolean[] doneFlags = new boolean[docs.size()];
+                    int[] remaining = {docs.size()};
 
-                                for (var doc : assignmentSnapshot.getDocuments()) {
-                                    String title = doc.getString("title");
-
-                                    String fullPath = "/Courses/" + courseId + "/assignments/" + doc.getId();
-
-                                    boolean isDone = doneMap.getOrDefault(fullPath, false);
-
-                                    java.text.SimpleDateFormat sdf =
-                                            new java.text.SimpleDateFormat("yy.MM.dd", java.util.Locale.KOREA);
-
-                                    String startStr = doc.getTimestamp("startAt") != null
-                                            ? sdf.format(doc.getTimestamp("startAt").toDate())
-                                            : "";
-
-                                    String endStr = doc.getTimestamp("endAt") != null
-                                            ? sdf.format(doc.getTimestamp("endAt").toDate())
-                                            : "";
-
-                                    String dateStr = startStr + " ~ " + endStr;
-
-                                    View itemView = getLayoutInflater().inflate(
-                                            isDone
-                                                    ? R.layout.item_subject_assignment_done
-                                                    : R.layout.item_subject_assignment_undone,
-                                            layoutAssignment,
-                                            false
-                                    );
-
-                                    ((TextView) itemView.findViewById(R.id.tv_assignment_title))
-                                            .setText(title != null ? title : "");
-
-                                    ((TextView) itemView.findViewById(R.id.tv_assignment_date))
-                                            .setText(dateStr);
-
-                                    itemView.setOnClickListener(v -> {
-
-                                        Intent intent = new Intent(this, SubjectAssignmentDetailActivity.class);
-
-                                        intent.putExtra("courseId", courseId);
-
-                                        intent.putExtra("assignmentId", doc.getId());
-
-                                        startActivity(intent);
-
-                                    });
-
-                                    layoutAssignment.addView(itemView);
-                                }
-                            });
+                    for (int i = 0; i < docs.size(); i++) {
+                        int index = i;
+                        var doc = docs.get(i);
+                        db.collection("Courses").document(courseId)
+                                .collection("assignments").document(doc.getId())
+                                .collection("submissions").document(uid)
+                                .get()
+                                .addOnSuccessListener(subDoc -> {
+                                    doneFlags[index] = subDoc.exists()
+                                            && Boolean.TRUE.equals(subDoc.getBoolean("isSubmitted"));
+                                    if (--remaining[0] == 0) renderAssignmentList(docs, doneFlags, courseId);
+                                })
+                                .addOnFailureListener(e -> {
+                                    if (--remaining[0] == 0) renderAssignmentList(docs, doneFlags, courseId);
+                                });
+                    }
                 });
+    }
+
+    // 쿼리 결과의 순서(최신순)를 그대로 유지하기 위해, 전부 조회가 끝난 뒤 한 번에 순서대로 그린다.
+    private void renderAssignmentList(List<com.google.firebase.firestore.DocumentSnapshot> docs, boolean[] doneFlags, String courseId) {
+        layoutAssignment.removeAllViews();
+        for (int i = 0; i < docs.size(); i++) {
+            renderAssignmentCard(docs.get(i), doneFlags[i], courseId);
+        }
+    }
+
+    private void renderAssignmentCard(com.google.firebase.firestore.DocumentSnapshot doc, boolean isDone, String courseId) {
+        String title = doc.getString("title");
+
+        java.text.SimpleDateFormat sdf =
+                new java.text.SimpleDateFormat("yy.MM.dd", java.util.Locale.KOREA);
+
+        String startStr = doc.getTimestamp("startAt") != null
+                ? sdf.format(doc.getTimestamp("startAt").toDate())
+                : "";
+
+        String endStr = doc.getTimestamp("endAt") != null
+                ? sdf.format(doc.getTimestamp("endAt").toDate())
+                : "";
+
+        String dateStr = startStr + " ~ " + endStr;
+
+        View itemView = getLayoutInflater().inflate(
+                isDone
+                        ? R.layout.item_subject_assignment_done
+                        : R.layout.item_subject_assignment_undone,
+                layoutAssignment,
+                false
+        );
+
+        ((TextView) itemView.findViewById(R.id.tv_assignment_title))
+                .setText(title != null ? title : "");
+
+        ((TextView) itemView.findViewById(R.id.tv_assignment_date))
+                .setText(dateStr);
+
+        if (!isDone) {
+            com.google.firebase.Timestamp endAtTs = doc.getTimestamp("endAt");
+            boolean deadlinePassed = endAtTs != null && endAtTs.toDate().before(new java.util.Date());
+            if (deadlinePassed) {
+                ((TextView) itemView.findViewById(R.id.tv_assignment_state)).setText("미완료");
+            }
+        }
+
+        itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SubjectAssignmentDetailActivity.class);
+            intent.putExtra("courseId", courseId);
+            intent.putExtra("assignmentId", doc.getId());
+            startActivity(intent);
+        });
+
+        layoutAssignment.addView(itemView);
     }
 
     private void loadNotices(FirebaseFirestore db, String courseId, String professor) {
@@ -210,100 +230,120 @@ public class SubjectMainActivity extends AppCompatActivity {
     }
 
     private void loadClasses(FirebaseFirestore db, String courseId, String uid) {
-        db.collection("Users").document(uid).collection("myTasks")
-                .whereEqualTo("type", "class")
+        db.collection("Courses").document(courseId).collection("classes")
+                .orderBy("startAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
                 .get()
-                .addOnSuccessListener(taskSnapshot -> {
-
-                    // refPath → status 맵
-                    java.util.Map<String, String> statusMap = new java.util.HashMap<>();
-                    for (var taskDoc : taskSnapshot.getDocuments()) {
-                        android.util.Log.d("DEBUG", "문서ID: " + taskDoc.getId());
-                        android.util.Log.d("DEBUG", "전체데이터: " + taskDoc.getData());
-                        String refPath = taskDoc.getString("classRefPath");
-                        String status = taskDoc.getString("status");
-                        android.util.Log.d("DEBUG", "refPath: " + refPath + " status: " + status); // 여기
-                        if (refPath != null) statusMap.put(refPath, status);
+                .addOnSuccessListener(classSnapshot -> {
+                    List<com.google.firebase.firestore.DocumentSnapshot> docs = classSnapshot.getDocuments();
+                    if (docs.isEmpty()) {
+                        layoutClass.removeAllViews();
+                        return;
                     }
 
-                    db.collection("Courses").document(courseId).collection("classes")
-                            .orderBy("startAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
-                            .get()
-                            .addOnSuccessListener(classSnapshot -> {
-                                layoutClass.removeAllViews();
+                    String[] statuses = new String[docs.size()];
+                    int[] remaining = {docs.size()};
 
-                                for (var doc : classSnapshot.getDocuments()) {
-                                    String title = doc.getString("title");
-                                    Long duration = doc.getLong("durationSeconds");
-                                    String durationStr = duration != null ? duration / 60 + "분" : "";
-                                    String fullPath = "/Courses/" + courseId + "/classes/" + doc.getId();
-                                    android.util.Log.d("DEBUG", "fullPath: " + fullPath); // 로그
-                                    String status = statusMap.getOrDefault(fullPath, "not_started");
-
-                                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yy.MM.dd");
-                                    String startStr = doc.getTimestamp("startAt") != null ? sdf.format(doc.getTimestamp("startAt").toDate()) : "";
-                                    String endStr   = doc.getTimestamp("endAt")   != null ? sdf.format(doc.getTimestamp("endAt").toDate())   : "";
-
-                                    View itemView = getLayoutInflater().inflate(R.layout.item_subject_class, layoutClass, false);
-
-                                    ((TextView) itemView.findViewById(R.id.tv_class_title)).setText(title);
-                                    ((TextView) itemView.findViewById(R.id.tv_class_info)).setText("온라인 | " + durationStr);
-                                    ((TextView) itemView.findViewById(R.id.tv_class_date)).setText(startStr + " ~ " + endStr);
-
-                                    TextView tvState = itemView.findViewById(R.id.tv_class_state);
-                                    switch (status) {
-                                        case "done":
-                                            tvState.setText("출석완료");
-                                            tvState.setBackgroundResource(R.drawable.bg_assignment_done);
-                                            break;
-                                        case "in_progress":
-                                            tvState.setText("진행중");
-                                            tvState.setBackgroundResource(R.drawable.bg_assignment_undone);
-                                            break;
-                                        case "not_started":
-                                            tvState.setText("미완료");
-                                            tvState.setBackgroundResource(R.drawable.bg_assignment_undone);
-                                            break;
-
-                                        default:
-                                            tvState.setText("???");
-                                            tvState.setBackgroundResource(R.drawable.bg_assignment_undone);
-                                            break;
-                                    }
-
-                                    // 수정 ...
-                                    itemView.setOnClickListener(v -> {
-                                        com.google.firebase.Timestamp startTimestamp = doc.getTimestamp("startAt");
-                                        com.google.firebase.Timestamp endTimestamp = doc.getTimestamp("endAt");
-
-                                        java.util.Date nowDate = new java.util.Date();
-
-                                        if (startTimestamp != null && endTimestamp != null) {
-                                            if (startTimestamp.toDate().after(endTimestamp.toDate())) {
-                                                Toast.makeText(this, "강의 기간 설정이 잘못되었습니다.", Toast.LENGTH_SHORT).show();
-                                                return;
-                                            }
-                                        }
-
-                                        if (startTimestamp != null && nowDate.before(startTimestamp.toDate())) {
-                                            Toast.makeText(this, "아직 수강 기간이 시작되지 않았습니다.", Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
-
-                                        if (endTimestamp != null && nowDate.after(endTimestamp.toDate())) {
-                                            Toast.makeText(this, "수강 기간이 종료되어 입장할 수 없습니다.", Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
-
-                                        Intent intent = new Intent(this, SubjectClassDetailActivity.class);
-                                        intent.putExtra("courseId", courseId);
-                                        intent.putExtra("classId", doc.getId());
-                                        startActivity(intent);
-                                    });
-                                    layoutClass.addView(itemView);
-                                }
-                            });
+                    for (int i = 0; i < docs.size(); i++) {
+                        int index = i;
+                        var doc = docs.get(i);
+                        db.collection("Courses").document(courseId)
+                                .collection("classes").document(doc.getId())
+                                .collection("progress").document(uid)
+                                .get()
+                                .addOnSuccessListener(progressDoc -> {
+                                    boolean completed = progressDoc.exists() && Boolean.TRUE.equals(progressDoc.getBoolean("completed"));
+                                    statuses[index] = resolveClassStatus(doc, completed);
+                                    if (--remaining[0] == 0) renderClassList(docs, statuses, courseId);
+                                })
+                                .addOnFailureListener(e -> {
+                                    statuses[index] = resolveClassStatus(doc, false);
+                                    if (--remaining[0] == 0) renderClassList(docs, statuses, courseId);
+                                });
+                    }
                 });
+    }
+
+    // 쿼리 결과의 순서(최신순)를 그대로 유지하기 위해, 전부 조회가 끝난 뒤 한 번에 순서대로 그린다.
+    private void renderClassList(List<com.google.firebase.firestore.DocumentSnapshot> docs, String[] statuses, String courseId) {
+        layoutClass.removeAllViews();
+        for (int i = 0; i < docs.size(); i++) {
+            renderClassCard(docs.get(i), courseId, statuses[i]);
+        }
+    }
+
+    // 완료 전까지는 수강 기간 내내 "진행중", 기간이 지나야 "미완료"로 표시한다.
+    private String resolveClassStatus(com.google.firebase.firestore.DocumentSnapshot doc, boolean completed) {
+        if (completed) return "done";
+
+        com.google.firebase.Timestamp endAtTs = doc.getTimestamp("endAt");
+        boolean periodEnded = endAtTs != null && endAtTs.toDate().before(new java.util.Date());
+
+        return periodEnded ? "not_started" : "in_progress";
+    }
+
+    private void renderClassCard(com.google.firebase.firestore.DocumentSnapshot doc, String courseId, String status) {
+        String title = doc.getString("title");
+        Long duration = doc.getLong("durationSeconds");
+        String durationStr = "";
+        if (duration != null) {
+            durationStr = duration < 60 ? duration + "초" : (duration / 60) + "분";
+        }
+
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yy.MM.dd");
+        String startStr = doc.getTimestamp("startAt") != null ? sdf.format(doc.getTimestamp("startAt").toDate()) : "";
+        String endStr   = doc.getTimestamp("endAt")   != null ? sdf.format(doc.getTimestamp("endAt").toDate())   : "";
+
+        View itemView = getLayoutInflater().inflate(R.layout.item_subject_class, layoutClass, false);
+
+        ((TextView) itemView.findViewById(R.id.tv_class_title)).setText(title);
+        ((TextView) itemView.findViewById(R.id.tv_class_info)).setText("온라인 | " + durationStr);
+        ((TextView) itemView.findViewById(R.id.tv_class_date)).setText(startStr + " ~ " + endStr);
+
+        TextView tvState = itemView.findViewById(R.id.tv_class_state);
+        switch (status) {
+            case "done":
+                tvState.setText("출석완료");
+                tvState.setBackgroundResource(R.drawable.bg_assignment_done);
+                break;
+            case "in_progress":
+                tvState.setText("진행중");
+                tvState.setBackgroundResource(R.drawable.bg_assignment_undone);
+                break;
+            default:
+                tvState.setText("미완료");
+                tvState.setBackgroundResource(R.drawable.bg_assignment_undone);
+                break;
+        }
+
+        itemView.setOnClickListener(v -> {
+            com.google.firebase.Timestamp startTimestamp = doc.getTimestamp("startAt");
+            com.google.firebase.Timestamp endTimestamp = doc.getTimestamp("endAt");
+
+            java.util.Date nowDate = new java.util.Date();
+
+            if (startTimestamp != null && endTimestamp != null) {
+                if (startTimestamp.toDate().after(endTimestamp.toDate())) {
+                    Toast.makeText(this, "강의 기간 설정이 잘못되었습니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            if (startTimestamp != null && nowDate.before(startTimestamp.toDate())) {
+                Toast.makeText(this, "아직 수강 기간이 시작되지 않았습니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (endTimestamp != null && nowDate.after(endTimestamp.toDate())) {
+                Toast.makeText(this, "수강 기간이 종료되어 입장할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Intent intent = new Intent(this, SubjectClassDetailActivity.class);
+            intent.putExtra("courseId", courseId);
+            intent.putExtra("classId", doc.getId());
+            startActivity(intent);
+        });
+        layoutClass.addView(itemView);
     }
 
     private void showLayout(LinearLayout target) {
