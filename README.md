@@ -38,7 +38,7 @@
 <br>
 
 # 📝 한신대학교 학생학습지원앱 README
-![README_IMAGE](images/github_readme.png)
+![README_IMAGE](docs/images/github_readme.png)
 
 <br>
 
@@ -155,7 +155,7 @@ FIGMA 작업 페이지: [캡스톤디자인_이러다졸업(UPCrew)_FIGMA](https
     
 | 시작 화면(좌) / 로그인 화면(우) |
 |----------|
-| ![시작/로그인 화면](images/upcrew_login.png) |
+| ![시작/로그인 화면](docs/images/upcrew_login.png) |
 
 ### [메인 화면]
 * **메인 화면**
@@ -169,7 +169,7 @@ FIGMA 작업 페이지: [캡스톤디자인_이러다졸업(UPCrew)_FIGMA](https
     
 | 메인 화면 |
 |----------|
-| <img src="images/upcrew_main.png" width="400"/> |
+| <img src="docs/images/upcrew_main.png" width="400"/> |
 
 ### [LMS: 강의리스트 화면]
 * **강의리스트 화면**
@@ -182,7 +182,7 @@ FIGMA 작업 페이지: [캡스톤디자인_이러다졸업(UPCrew)_FIGMA](https
     
 | 강의목록 화면 |
 |----------|
-| <img src="images/upcrew_LMS.png" width="400"/> |
+| <img src="docs/images/upcrew_LMS.png" width="400"/> |
 
 ### [LMS: 강의실 화면]
 * **강의실 화면**
@@ -206,7 +206,7 @@ FIGMA 작업 페이지: [캡스톤디자인_이러다졸업(UPCrew)_FIGMA](https
  
 | 과목공지 화면 | 학습자료 화면 | 과제제출 화면 | 수강 화면 |
 |------|------|------|------|
-| <img src="images/upcrew_LMS_notice.png" width="400"/> | <img src="images/upcrew_LMS_material.png" width="400"/> | <img src="images/upcrew_LMS_report.png" width="400"/> | <img src="images/upcrew_LMS_std.png" width="400"/> |
+| <img src="docs/images/upcrew_LMS_notice.png" width="400"/> | <img src="docs/images/upcrew_LMS_material.png" width="400"/> | <img src="docs/images/upcrew_LMS_report.png" width="400"/> | <img src="docs/images/upcrew_LMS_std.png" width="400"/> |
 
 <br>
 
