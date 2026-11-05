@@ -30,6 +30,10 @@ public class ReadingRoomReservationListActivity extends AppCompatActivity {
         setupBottomNavigation();
 
         db = FirebaseFirestore.getInstance();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            finish();
+            return;
+        }
         userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         setupHeader();
@@ -84,13 +88,15 @@ public class ReadingRoomReservationListActivity extends AppCompatActivity {
 
                         tvInfo.setText(info);
 
-                        Intent intent = new Intent(this, ReadingRoomReservationConfirmActivity.class);
-                        intent.putExtra("room", room);
-                        intent.putExtra("date", date);
-                        intent.putExtra("time", time);
-                        intent.putExtra("seat", seat);
-                        intent.putExtra("active", active != null && active);
-                        startActivity(intent);
+                        card.setOnClickListener(v -> {
+                            Intent intent = new Intent(this, ReadingRoomReservationConfirmActivity.class);
+                            intent.putExtra("room", room);
+                            intent.putExtra("date", date);
+                            intent.putExtra("time", time);
+                            intent.putExtra("seat", seat);
+                            intent.putExtra("active", active != null && active);
+                            startActivity(intent);
+                        });
 
                         listContainer.addView(card);
                     }

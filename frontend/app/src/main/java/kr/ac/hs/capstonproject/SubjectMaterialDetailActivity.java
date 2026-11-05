@@ -129,23 +129,6 @@ public class SubjectMaterialDetailActivity extends AppCompatActivity {
             Toast.makeText(this, "경로 오류: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
-//    private void downloadFile(String gsUrl, String fileName) {
-//        StorageReference ref;
-//        if (gsUrl.startsWith("gs://")) {
-//            ref = FirebaseStorage.getInstance().getReferenceFromUrl(gsUrl);
-//        } else {
-//            // 이미 https URL인 경우 바로 열기
-//            openUrl(gsUrl);
-//            return;
-//        }
-//
-//        Toast.makeText(this, "파일 준비 중...", Toast.LENGTH_SHORT).show();
-//
-//        ref.getDownloadUrl()
-//                .addOnSuccessListener(uri -> openUrl(uri.toString()))
-//                .addOnFailureListener(e ->
-//                        Toast.makeText(this, "파일 열기 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-//    }
 
 
     private void openUrl(String url) {
