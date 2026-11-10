@@ -1,43 +1,4 @@
-**아래는 깃허브 리드미 작성 가이드 (작성 후 삭제 예정)**
-```
-1. README 표지
-2. 하이퍼링크 (선택)
-3. 프로젝트 간단 소개
-4. 핵심 기능
-5. 팀명/팀구성
-6. 역할 설명
-7. 개발환경 (프론트/백엔드/협업 툴(디스코드, 카카오톡, 깃허브, 피그마), 디자인(피그마) 등)
-8. 벤치마킹/사용한 개발 기술
-9. UI/UX 디자인
-10. 모바일 프로그래밍 (Android Studio)
-11. 개발 기간
-12. 프로젝트 후기
-
-*DB다이어그램 넣기
-*실행방법 넣기
-*보안 상의 문제로, LMS에서 진행하는 온라인 시험은 웹을 통해야 함
-```
-
-<br>
-
-<!-- <h1 align="center">
-  <br>
-  9조 이러다졸업조 UpCrew
-  <br>
-  한신대학교 학생학습지원앱
-  <br>
-</h1>
-<p align="center">
-  <a href="#key-features">수정 필요</a> •
-  <a href="#프로젝트-개요">프로젝트 개요</a> •
-  <a href="#팀 구성">팀 구성</a> •
-  <a href="#key-features">Key Features</a> •
-  <a href="#실행-방법">실행 방법</a> •
--->
-
-<br>
-
-# 📝 한신대학교 학생학습지원앱 README
+# 📝 한신대학교 학생학습지원앱 — UpCrew
 ![README_IMAGE](docs/images/github_readme.png)
 
 <br>
@@ -46,34 +7,53 @@
 한신대학교 학생학습지원앱은 하나의 통합 플랫폼에서 학습시설 혼잡도 확인, 예약 및 Learning Management System(LMS) 기능을 제공하는 모바일 애플리케이션이다.
 
 <br>
-  
+
 ## 1-1. 핵심 기능
+
+### [시작/로그인] 애플리케이션 진입
+  - 시작 화면: 애플리케이션 실행 시 표기되는 화면
+  - 로그인 화면: 한신대학교 통합로그인 정보로만 로그인 가능
+  - 'Saved ID/PW' 기능으로 로그인 정보 유지, 저장된 계정이 있으면 로그인 화면 생략
+
+### [메인] 홈 화면
+  - 학적(학번/학과/학년) 표기
+  - '다가오는 일정' 최근접 2개 일정 미리보기
+  - 학습관리시스템(LMS), 교내 학습시설 페이지로 이동
+
 ### [학습시설] 혼잡도 확인
   - OpenCV를 활용해 학습 시설 내 인원 현황을 파악
   - 혼잡도 상태를 "여유/보통/혼잡" 3단계로 표시
-  - 실시간으로 각 공간(카페, 라운지 등)의 이용현황 확인 가능
-    
-### [학습시설] 좌석 예약 시스템
-  - 도서관, 스터디룸 등 예약이 필요한 공간에 대해 좌석 선택 및 예약 가능
-  - 예약 시 해당 좌석은 자동으로 '사용 중' 상태로 전환
-    
+  - 건물(관)·층 단위로 꼼지락, 라운지 등 세부 공간의 실시간 이용현황 확인 가능
+
+### [학습시설] 좌석/공간 예약 시스템
+  - 회의실, 열람실 등 예약이 필요한 공간에 대해 예약하기/내역 확인 가능
+  - 예약 시 해당 공간은 자동으로 '사용 중' 상태로 전환
+
+### [LMS] 강의 및 학습 관리
+  - 현재 학기 수강 강의 목록 표기 (강의명, 분반, 담당교수명, 학점, 학수번호)
+  - 강의실 진입 시 과목공지 / 학습자료 / 과제제출 / 수강 4개 탭으로 구성
+    - 과목공지: 게시된 공지 목록 확인 (작성자, 조회수, 작성일)
+    - 학습자료: 주차별 수업자료 목록 확인
+    - 과제제출: 과제 목록 및 제출 여부 확인
+    - 수강: 주차별 온라인 강의 목록, 학습기간, 수강(출석) 여부 확인
+
 ### [LMS] 일정 관리 및 푸시 알림
-  - 한신대학교 LMS와 연동하여 접근성 강화
-  - 개인 일정 관리
-     - 일정 확인을 위한 캘린더 기능 제공
-     - 다가오는 일정: 최근접 2개 일정 홈화면 표기
-  - 푸시 알림
-     - 공지/과제/온라인 강의: 등록 시 푸시 알림
-     - 과제/온라인 강의: 기한 마감 3일, 1일 전 푸시 알림
-    
+  - 개인 일정 관리를 위한 캘린더 기능 제공
+  - 공지/과제/온라인 강의 등록 시 푸시 알림
+  - 과제/온라인 강의 기한 마감 3일, 1일 전 푸시 알림
+
 ### [보안] 사용자 인증 및 권한 관리
-  - 한신대학교 통합로그인 정보에 기반한 회원 가입 및 로그인 기능 제공
+  - 한신대학교 통합로그인 정보에 기반한 회원가입 및 로그인 기능 제공
   - 학생/교수 구분에 따른 접근 권한 설정
-    
+
 <br>
 
-## 1-2. 채택 개발 기술 및 벤치마킹
-- tmp
+## 1-2. 채택 개발 기술
+- **모바일**: Android (Java), Android Studio
+- **백엔드/인프라**: Firebase (Authentication, Firestore, Cloud Functions, Cloud Storage)
+- **AI/혼잡도 분석**: Python, OpenCV
+- **관리자 웹**: HTML/CSS/JavaScript
+- **디자인**: Figma
 
 <br>
 
@@ -90,59 +70,69 @@
 
 ## 2-1. 역할 분담
 ### 전채영
-* **(주) DB**
-  - 한 내용 적기
-* 모바일 프로그래밍(Android Studio)
-  - tmp
-  
-<br>
+* **(주) DB** — 작성 예정
+* 모바일 프로그래밍 (Android Studio) — 작성 예정
 
 ### 이나경
-* **(주) AI**
-  - 한 내용 적기
-* 모바일 프로그래밍(Android Studio)
-  - tmp
-
-<br>
+* **(주) AI** — 작성 예정
+* 모바일 프로그래밍 (Android Studio) — 작성 예정
 
 ### 이민정
-* **(주) UI/UX**
-  - 한 내용 적기
- 
+* **(주) UI/UX** — 작성 예정
+
 <br>
 
 ## 3. 개발 환경
-* **Front-end**: 
-* **Back-end**: 
+* **Front-end**: Android (Java), Android Studio
+* **Back-end**: Firebase (Firestore, Cloud Functions, Cloud Storage)
 * **UI/UX Design**: Figma
 * **Collaboration Tools**: Discord, KakaoTalk, GitHub, Figma
- 
+
 <br>
 
-## 시스템 서버 및 아키텍처
-
-To clone and run this application, you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
-
-```bash
-# Clone this repository
-$ git clone https://github.com/amitmerchant1990/electron-markdownify
-
-# Go into the repository
-$ cd electron-markdownify
-
-# Install dependencies
-$ npm install
-
-# Run the app
-$ npm start
+## 4. 폴더 구조
+```
+capstone25-upcrew/
+├── admin-web/      # 관리자 웹 (HTML/CSS/JS)
+├── ai/             # 혼잡도 분석 워커 (Python, OpenCV)
+├── docs/           # 보고서, 발표자료, README용 이미지
+├── frontend/       # Android 앱 (Android Studio)
+├── spacesense/     # Android 앱 (Android Studio)
+├── functions/      # Firebase Cloud Functions (푸시 알림 등)
+├── firebase.json / firestore.rules / firestore.indexes.json / storage.rules
+└── .firebaserc
 ```
 
-> **Note**
-> If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
+<br>
+
+## 5. 실행 방법
+### Android 앱 (`frontend/`, `spacesense/`)
+```bash
+cd frontend   # 또는 cd spacesense
+./gradlew assembleDebug
+```
+Android Studio에서 해당 폴더를 프로젝트로 열어 실행할 수도 있다.
+
+### Firebase Cloud Functions (`functions/`)
+```bash
+cd functions
+npm install
+firebase deploy --only functions
+```
+
+### 혼잡도 분석 워커 (`ai/`)
+```bash
+cd ai
+pip install -r requirements.txt
+python analyzer_worker.py
+```
+
+### 관리자 웹 (`admin-web/`)
+`admin-web/index.html`을 브라우저로 열어 확인한다.
 
 <br>
 
-## UI/UX 
+## UI/UX
 FIGMA 작업 페이지: [캡스톤디자인_이러다졸업(UPCrew)_FIGMA](https://www.figma.com/design/Z9tQCgVkBRwPdPOc9ZHZh1/%EC%BA%A1%EB%94%94_%EC%9D%B4%EB%9F%AC%EB%8B%A4%EC%A1%B8%EC%97%85?node-id=0-1&t=YM0C7m7QOdhPkOWA-1)
 
 ### [시작/로그인 화면]
@@ -152,7 +142,7 @@ FIGMA 작업 페이지: [캡스톤디자인_이러다졸업(UPCrew)_FIGMA](https
   - 시작 화면 직후 표기되는 화면
   - 한신대학교 통합로그인 정보로만 로그인 가능
   - 저장된 로그인 계정이 있는 경우 생략
-    
+
 | 시작 화면(좌) / 로그인 화면(우) |
 |----------|
 | ![시작/로그인 화면](docs/images/upcrew_login.png) |
@@ -166,10 +156,19 @@ FIGMA 작업 페이지: [캡스톤디자인_이러다졸업(UPCrew)_FIGMA](https
   - [다가오는 일정] 기한이 가장 임박한 2개 일정 미리보기
   - [학습관리시스템] LMS 페이지로 이동
   - [교내 학습시설] 학습시설 현황 및 예약 페이지로 이동
-    
+
 | 메인 화면 |
 |----------|
 | <img src="docs/images/upcrew_main.png" width="400"/> |
+
+### [학습시설 화면]
+* **학습시설 화면**
+  - 메인 화면에서 '교내 학습시설' 카드를 눌러 진입하는 화면
+  - 한신대학교 학습 시설을 관(건물), 층 단위로 표기
+* **상세**
+  - 학습시설이 존재하는 관, 층 표기
+  - 혼잡도(혼잡/보통/여유) 상태 표기
+  - 회의실, 열람실 예약하기 / 예약 내역 확인 기능
 
 ### [LMS: 강의리스트 화면]
 * **강의리스트 화면**
@@ -179,7 +178,7 @@ FIGMA 작업 페이지: [캡스톤디자인_이러다졸업(UPCrew)_FIGMA](https
   - [상단] 페이지 확인
   - [중단 스크롤] 수강 강의 목록 확인
   - [강의 카드] 강의명, 분반, 담당교수명, 구분(학점), 학수번호 표기
-    
+
 | 강의목록 화면 |
 |----------|
 | <img src="docs/images/upcrew_LMS.png" width="400"/> |
@@ -203,27 +202,7 @@ FIGMA 작업 페이지: [캡스톤디자인_이러다졸업(UPCrew)_FIGMA](https
   - [상단] 강의실 확인
   - [중단 스크롤] 게시된 온라인 강의 목록 확인
   - [수강 카드] 주차, 주차 기준 학습기간, 회차 정보, 수강 여부 등 표기
- 
+
 | 과목공지 화면 | 학습자료 화면 | 과제제출 화면 | 수강 화면 |
 |------|------|------|------|
 | <img src="docs/images/upcrew_LMS_notice.png" width="400"/> | <img src="docs/images/upcrew_LMS_material.png" width="400"/> | <img src="docs/images/upcrew_LMS_report.png" width="400"/> | <img src="docs/images/upcrew_LMS_std.png" width="400"/> |
-
-<br>
-
-## Credits
-
-This software uses the following open source packages:
-
-- [Electron](http://electron.atom.io/)
-- [Node.js](https://nodejs.org/)
-- [Marked - a markdown parser](https://github.com/chjj/marked)
-- [showdown](http://showdownjs.github.io/showdown/)
-- [CodeMirror](http://codemirror.net/)
-- Emojis are taken from [here](https://github.com/arvida/emoji-cheat-sheet.com)
-- [highlight.js](https://highlightjs.org/)
-
-<br>
-
-## Related
-
-[Try Web version of Markdownify](https://notepad.js.org/markdown-editor/)
